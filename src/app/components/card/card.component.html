@@ -1,0 +1,13 @@
+<article class="card">
+  <h1 class="card-title">
+    <ng-content select="[cardTitle]" />
+  </h1>
+
+  <div class="meta-data">Les Joies du Code, commit du 12 Mai 2023</div>
+
+  <div class="card-content">    
+    <ng-content select="[cardContent]" />
+  </div>
+
+  <ng-content name="[cardActions]" />
+</article>

@@ -1,0 +1,26 @@
+.card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #dcdcdc;
+  margin-bottom: 10px;
+
+  .card-title {
+    font-size: 24px;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+
+    a {
+      cursor: pointer;
+    }
+  }
+
+  .meta-data {
+    font-size: 12px;
+    margin-bottom: 10px;
+    color: #787c7e;
+  }
+}
+
+

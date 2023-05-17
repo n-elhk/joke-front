@@ -1,0 +1,14 @@
+:host {
+  .app-wrapper {
+    display: flex;
+    gap: 2rem;
+
+    .content {
+      flex: 0 0 66.666667%;
+    }
+
+    .right-nav {
+      flex: 0 0 33.333333%;
+    }
+  }
+}

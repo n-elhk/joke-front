@@ -1,0 +1,38 @@
+:host {
+  .joke-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .previous-btn {
+    width: 100%;
+    text-align: center;
+    border: 1px solid #0056b3;
+    padding: 0.3rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .next-btn {
+    width: 100%;
+    text-align: center;
+    background-color: #0056b3;
+    border: 1px solid #0056b3;
+    padding: 0.3rem;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #004198;
+    }
+  }
+
+  .previous-btn:disabled,
+  .next-btn:disabled {
+    opacity: 40%;
+    cursor: not-allowed;
+  }
+}

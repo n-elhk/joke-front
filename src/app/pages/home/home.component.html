@@ -1,0 +1,8 @@
+<div *ngFor="let joke of jokes(); let i = index">
+  <app-card [joke]="joke">
+    <a cardTitle (click)="goToJoke(i)">{{ joke.title }}</a>
+    <div cardContent>
+      <img [src]="joke.media" width="500" height="500" alt="ferf" />
+    </div>
+  </app-card>
+</div>

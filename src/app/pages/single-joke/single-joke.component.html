@@ -1,0 +1,14 @@
+<div *ngIf="joke">
+  <app-card [joke]="joke">
+    <div cardTitle>{{ joke.title }}</div>
+
+    <div cardContent>
+      <img [src]="joke.media" width="500" height="500" alt="ferf" />
+    </div>
+
+    <div class="joke-actions" cardActions>
+      <button (click)="previousItem()" class="previous-btn">Précédent</button>
+      <button (click)="nextItem()" class="next-btn">Suivant</button>
+    </div>
+  </app-card>
+</div>
