@@ -4,11 +4,11 @@ import {
   Component,
   inject,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { JokeService } from '../../core/services/joke/joke.service';
 import { Router, RouterLink } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { filter, fromEvent, switchMap, tap, throttleTime } from 'rxjs';
 
 @Component({
@@ -16,7 +16,7 @@ import { filter, fromEvent, switchMap, tap, throttleTime } from 'rxjs';
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [CardComponent, NgForOf, RouterLink],
+  imports: [CardComponent, NgForOf, RouterLink, NgIf],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
@@ -29,8 +29,9 @@ export class HomeComponent {
   /** Injection of {@link ChangeDetectorRef}. */
   private readonly cdr = inject(ChangeDetectorRef);
 
-  public jokes = this.jokeService.jokes;
-  public currentJoke = this.jokeService.currentJoke;
+  public jokes = toSignal(this.jokeService.selectJokes$);
+
+  public currentJoke = toSignal(this.jokeService.selectCurrentJoke$);
 
   constructor() {
     fromEvent(window, 'scroll', { passive: true })
@@ -49,8 +50,8 @@ export class HomeComponent {
   }
 
 
-  public goToJoke(index: number): void {
-    this.jokeService.selectIndex(index);
+  public goToJoke(jokeId: number): void {
+    this.jokeService.loadJoke(jokeId);
 
     const currentJoke = this.currentJoke();
 

@@ -9,6 +9,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 import { CustomReusingStrategy } from './core/services/custom-reuse-strategy/custom-reuse-strategy';
 import { JokeService } from './core/services/joke/joke.service';
+import { provideComponentStore } from '@ngrx/component-store';
 
 export function initializeApp1(jokeService: JokeService) {
   return () => {
@@ -28,5 +29,8 @@ export const appConfig: ApplicationConfig = {
 
     provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling()),
     provideHttpClient(),
+
+    provideComponentStore(JokeService),
+
   ],
 };

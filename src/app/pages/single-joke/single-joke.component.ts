@@ -4,11 +4,13 @@ import {
   Input,
   inject,
   ChangeDetectionStrategy,
+  OnInit,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
 import type { Joke } from '../../core/interface/joke';
 import { JokeService } from 'src/app/core/services/joke/joke.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-single-joke',
@@ -18,29 +20,35 @@ import { JokeService } from 'src/app/core/services/joke/joke.service';
   imports: [NgIf, RouterLink, CardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SingleJokeComponent {
+export class SingleJokeComponent implements OnInit {
   /** Injection of {@link JokeService}. */
   private readonly jokeService = inject(JokeService);
 
   /** Injection of {@link Router}. */
   private readonly router = inject(Router);
 
-  protected readonly previousJoke = this.jokeService.previousJoke;
+  protected readonly previousJoke = toSignal(
+    this.jokeService.selectPreviousJokes$
+  );
 
-  protected readonly nextJoke = this.jokeService.nextJoke;
+  protected readonly nextJoke = toSignal(this.jokeService.selectNextJokes$);
 
   /** Provide from route data. */
   @Input() public joke!: Joke;
+
+   public ngOnInit(): void {
+    this.jokeService.loadPreviousJoke();
+  }
 
   /**
    *
    * @param id sorted by id.
    */
-  previousItem(): void {
+  public previousItem(): void {
     const previous = this.previousJoke();
 
     if (previous) {
-      this.jokeService.decrIndex();
+      this.jokeService.loadJoke(previous.id);
       this.router.navigate([previous.slug]);
     }
   }
@@ -49,11 +57,11 @@ export class SingleJokeComponent {
    *
    * @param id sorted by id.
    */
-  nextItem(): void {
+  public nextItem(): void {
     const next = this.nextJoke();
 
     if (next) {
-      this.jokeService.incrIndex();
+      this.jokeService.loadJoke(next.id);
       this.router.navigate([next.slug]);
     }
   }

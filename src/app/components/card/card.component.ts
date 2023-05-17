@@ -10,6 +10,4 @@ import type { Joke } from 'src/app/core/interface/joke';
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
 })
-export class CardComponent {
-  @Input({ required: true }) public joke!: Joke;
-}
+export class CardComponent {}

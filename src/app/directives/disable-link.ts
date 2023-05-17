@@ -1,4 +1,4 @@
-import { Directive, Input, Optional, inject } from '@angular/core';
+import { Directive, Input, inject } from '@angular/core';
 import { RouterLink, RouterLinkWithHref } from '@angular/router';
 
 @Directive({
