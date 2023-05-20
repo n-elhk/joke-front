@@ -28,6 +28,7 @@
 
           .top {
             font-size: 2rem;
+            
           }
 
           .bottom {
@@ -47,7 +48,8 @@
             padding: 0;
             font-size: 1rem;
 
-            a {
+            a,
+            button {
               display: inline-block;
               padding: 0;
               text-transform: capitalize;
@@ -60,11 +62,12 @@
 
               &:hover {
                 color: #0059cf;
+                cursor: pointer;
               }
 
-              &:focus {
-                border-color: rgb(119 148 228 / 0.5);
-              }
+              // &:focus {
+              //   border-color: rgb(119 148 228 / 0.5);
+              // }
             }
           }
         }

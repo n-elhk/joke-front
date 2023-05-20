@@ -34,6 +34,8 @@ export class JokeService extends ComponentStore<JokeStore> {
 
   readonly selectNextJokes$ = this.select(({ nextJoke }) => nextJoke);
 
+  readonly selectIsLoading$ = this.select(({ loading }) => loading);
+
   readonly updateJokes = this.updater((state, jokes: Joke[]) => ({
     ...state,
     jokes: {
@@ -95,6 +97,16 @@ export class JokeService extends ComponentStore<JokeStore> {
 
     return this.httpClient.get<Joke>(`${this.urlServer}/joke`, { params }).pipe(
       tap((joke) => this.updateJokes([joke])),
+      finalize(() => this.updateloading(false))
+    );
+  }
+
+  public getRandomJoke(): Observable<Joke> {
+    this.updateloading(true);
+
+    return this.httpClient.get<Joke>(`${this.urlServer}/joke/random`).pipe(
+      tap((joke) => this.updateJokes([joke])),
+      tap((joke) => this.updateCurrentJoke(joke.id)),
       finalize(() => this.updateloading(false))
     );
   }

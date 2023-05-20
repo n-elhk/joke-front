@@ -3,15 +3,15 @@
     <div class="wrapper">
       <div class="logo-container">
         <div class="top">
-          <a href=".">les joies</a>
+          <a routerLink="." routerLinkActive="router-link-active" >les joies</a>
         </div>
         <div class="bottom">
-          <a href=".">chrétiennes</a>
+          <a routerLink=".">chrétiennes</a>
         </div>
       </div>
       <ul>
-        <li>
-          <a href="/random">Random</a>
+        <li (click)="getRandom()">
+          <button type="button">Random</button>
         </li>
 
         <li>
@@ -19,7 +19,7 @@
         </li>
 
         <li>
-          <a href="">Boutique</a>
+          <a href="/shop">Boutique</a>
         </li>
       </ul>
     </div>

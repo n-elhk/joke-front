@@ -10,13 +10,14 @@ import { Router, RouterLink } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
 import { NgForOf, NgIf } from '@angular/common';
 import { filter, fromEvent, switchMap, tap, throttleTime } from 'rxjs';
+import { SpinnerComponent } from 'src/app/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [CardComponent, NgForOf, RouterLink, NgIf],
+  imports: [CardComponent, NgForOf, RouterLink, NgIf, SpinnerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
@@ -30,6 +31,8 @@ export class HomeComponent {
   private readonly cdr = inject(ChangeDetectorRef);
 
   public jokes = toSignal(this.jokeService.selectJokes$, { initialValue: [] });
+
+  public isLoading = toSignal(this.jokeService.selectIsLoading$, { initialValue: false });
 
   public currentJoke = toSignal(this.jokeService.selectCurrentJoke$);
 
