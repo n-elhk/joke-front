@@ -1,5 +1,5 @@
 <div *ngFor="let joke of jokes(); let i = index">
-  <app-card *ngIf="joke as j">
+  <app-card [attr.id]="joke.id" *ngIf="joke as j">
     <a cardTitle (click)="goToJoke(joke.id)">{{ joke.title }}</a>
     <div cardContent>
       <img [src]="joke.media" width="500" height="500" alt="ferf" />

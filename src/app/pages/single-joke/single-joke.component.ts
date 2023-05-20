@@ -48,7 +48,7 @@ export class SingleJokeComponent implements OnInit {
     const previous = this.previousJoke();
 
     if (previous) {
-      this.jokeService.loadJoke(previous.id);
+      this.jokeService.updateCurrentJoke(previous.id);
       this.router.navigate([previous.slug]);
     }
   }
@@ -61,7 +61,7 @@ export class SingleJokeComponent implements OnInit {
     const next = this.nextJoke();
 
     if (next) {
-      this.jokeService.loadJoke(next.id);
+      this.jokeService.updateCurrentJoke(next.id);
       this.router.navigate([next.slug]);
     }
   }

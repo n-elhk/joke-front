@@ -26,7 +26,7 @@ export class AppComponent {
   private readonly cdr = inject(ChangeDetectorRef);
 
   constructor() {
-    /** Restore the scroll */
+    /** Restore the scroll. */
     this.router.events
       .pipe(
         filter((e: Event): e is Scroll => e instanceof Scroll),

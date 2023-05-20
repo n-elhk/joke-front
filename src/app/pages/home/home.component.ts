@@ -29,7 +29,7 @@ export class HomeComponent {
   /** Injection of {@link ChangeDetectorRef}. */
   private readonly cdr = inject(ChangeDetectorRef);
 
-  public jokes = toSignal(this.jokeService.selectJokes$);
+  public jokes = toSignal(this.jokeService.selectJokes$, { initialValue: [] });
 
   public currentJoke = toSignal(this.jokeService.selectCurrentJoke$);
 
@@ -42,16 +42,15 @@ export class HomeComponent {
             Math.ceil(window.innerHeight + window.scrollY) >=
             document.body.offsetHeight
         ),
-        switchMap(() => this.jokeService.getJokes()),
+        switchMap(() => this.jokeService.getJokes(this.jokes().length)),
         tap(() => this.cdr.detectChanges()),
         takeUntilDestroyed()
       )
       .subscribe();
   }
 
-
   public goToJoke(jokeId: number): void {
-    this.jokeService.loadJoke(jokeId);
+    this.jokeService.updateCurrentJoke(jokeId);
 
     const currentJoke = this.currentJoke();
 

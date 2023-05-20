@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, Signal, computed, inject, signal } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import type { Joke } from '../../interface/joke';
 import {
@@ -13,7 +13,7 @@ import {
 import { ComponentStore } from '@ngrx/component-store';
 
 interface JokeStore {
-  jokes: Record<number, Joke | undefined>;
+  jokes: Record<string, Joke | undefined>;
   previousJoke: Joke | undefined;
   currentJoke: Joke | undefined;
   nextJoke: Joke | undefined;
@@ -54,6 +54,33 @@ export class JokeService extends ComponentStore<JokeStore> {
     );
   });
 
+  readonly updateJokes = this.updater((state, jokes: Joke[]) => ({
+    ...state,
+    jokes: {
+      ...state.jokes,
+      ...Object.fromEntries(jokes.map((joke) => [joke.slug, joke])),
+    },
+  }));
+
+  readonly updatePreviousJoke = this.updater(
+    (state, previousJoke: Joke | undefined) => ({
+      ...state,
+      previousJoke,
+    })
+  );
+
+  public readonly updateCurrentJoke = this.updater((state, jokeId: number) => ({
+    ...state,
+    previousJoke: state.jokes[jokeId - 1],
+    currentJoke: state.jokes[jokeId],
+    nextJoke: state.jokes[jokeId + 1],
+  }));
+
+  private readonly updateloading = this.updater((state, loading: boolean) => ({
+    ...state,
+    loading,
+  }));
+
   constructor() {
     super({
       jokes: {},
@@ -65,54 +92,25 @@ export class JokeService extends ComponentStore<JokeStore> {
     });
   }
 
-  readonly updateJokes = this.updater((state, jokes: Joke[]) => ({
-    ...state,
-    jokes: Object.fromEntries(jokes.map((joke) => [joke.id, joke])),
-  }));
-
-  readonly updatePreviousJoke = this.updater(
-    (state, previousJoke: Joke | undefined) => ({
-      ...state,
-      previousJoke,
-    })
-  );
-
-  readonly loadJoke = this.updater((state, jokeId: number) => ({
-    ...state,
-    previousJoke: state.jokes[jokeId - 1],
-    currentJoke: state.jokes[jokeId],
-    nextJoke: state.jokes[jokeId + 1],
-  }));
-
-  readonly loading = this.updater((state, loading: boolean) => ({
-    ...state,
-    loading,
-  }));
-
-  public getJokes(): Observable<Joke[]> {
-    this.loading(true);
-    return this.httpClient.get<Joke[]>(this.urlServer + '/jokes').pipe(
-      tap(newJokes => this.updateJokes(newJokes)),
-      finalize(() => this.loading(false))
-    );
+  public getJokes(skip = 0): Observable<Joke[]> {
+    const params = new HttpParams().set('skip', skip);
+    this.updateloading(true);
+    return this.httpClient
+      .get<Joke[]>(this.urlServer + '/jokes', { params })
+      .pipe(
+        tap((newJokes) => this.updateJokes(newJokes)),
+        finalize(() => this.updateloading(false))
+      );
   }
-
-  // public getJokes(): Observable<Joke[]> {
-  //   return this.httpClient.get<Joke[]>(this.urlServer + '/jokes').pipe(
-  //     tap(() => this.jokeIsLoading.set(true)),
-  //     tap(newJokes => this.jokes.mutate((j) => j.push(...newJokes))),
-  //     finalize(() => this.jokeIsLoading.set(false))
-  //   );
-  // }
 
   public getJokeBySlug(slug: string): Observable<Joke> {
     return this.httpClient.get<Joke>(`${this.urlServer}/joke/${slug}`);
   }
 
   public getJokeById(id: number): Observable<Joke> {
-    this.loading(true);
+    this.updateloading(true);
     return this.httpClient
       .get<Joke>(`${this.urlServer}/joke/${id}`)
-      .pipe(finalize(() => this.loading(false)));
+      .pipe(finalize(() => this.updateloading(false)));
   }
 }
