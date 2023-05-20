@@ -2,18 +2,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import type { Joke } from '../../interface/joke';
-import {
-  Observable,
-  filter,
-  finalize,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs';
+import { Observable, finalize, tap } from 'rxjs';
 import { ComponentStore } from '@ngrx/component-store';
 
 interface JokeStore {
-  jokes: Record<string, Joke | undefined>;
+  jokes: Record<number, Joke | undefined>;
   previousJoke: Joke | undefined;
   currentJoke: Joke | undefined;
   nextJoke: Joke | undefined;
@@ -29,7 +22,9 @@ export class JokeService extends ComponentStore<JokeStore> {
 
   private urlServer = environment.urlServer;
 
-  readonly selectJokes$ = this.select(({ jokes }) => Object.values(jokes));
+  readonly selectJokes$ = this.select(({ jokes }) =>
+    Object.values(jokes).sort((a, b) => (b?.id ?? 0) - (a?.id ?? 0))
+  );
 
   readonly selectPreviousJokes$ = this.select(
     ({ previousJoke }) => previousJoke
@@ -39,26 +34,11 @@ export class JokeService extends ComponentStore<JokeStore> {
 
   readonly selectNextJokes$ = this.select(({ nextJoke }) => nextJoke);
 
-  readonly loadPreviousJoke = this.effect((trigger$) => {
-    return trigger$.pipe(
-      withLatestFrom(this.selectPreviousJokes$, this.selectCurrentJoke$),
-      filter(
-        ([, previousJokes, currentJoke]) => !previousJokes && !!currentJoke
-      ),
-      switchMap(([, , currentJoke]) =>
-        this.getJokeById((currentJoke?.id as number) - 1)
-      ),
-      tap((previousJoke) => {
-        this.updatePreviousJoke(previousJoke);
-      })
-    );
-  });
-
   readonly updateJokes = this.updater((state, jokes: Joke[]) => ({
     ...state,
     jokes: {
       ...state.jokes,
-      ...Object.fromEntries(jokes.map((joke) => [joke.slug, joke])),
+      ...Object.fromEntries(jokes.map((joke) => [joke.id, joke])),
     },
   }));
 
@@ -103,14 +83,19 @@ export class JokeService extends ComponentStore<JokeStore> {
       );
   }
 
-  public getJokeBySlug(slug: string): Observable<Joke> {
-    return this.httpClient.get<Joke>(`${this.urlServer}/joke/${slug}`);
-  }
+  public getJoke(
+    parameters: Record<string, string | number>
+  ): Observable<Joke> {
+    const params = Object.entries(parameters).reduce(
+      (acc, [key, value]) => acc.set(key, value),
+      new HttpParams()
+    );
 
-  public getJokeById(id: number): Observable<Joke> {
     this.updateloading(true);
-    return this.httpClient
-      .get<Joke>(`${this.urlServer}/joke/${id}`)
-      .pipe(finalize(() => this.updateloading(false)));
+
+    return this.httpClient.get<Joke>(`${this.urlServer}/joke`, { params }).pipe(
+      tap((joke) => this.updateJokes([joke])),
+      finalize(() => this.updateloading(false))
+    );
   }
 }

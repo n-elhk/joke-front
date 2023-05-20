@@ -8,9 +8,8 @@ export const jokeResolver: ResolveFn<Joke | undefined> = (route, state) => {
   const jokeService = inject(JokeService);
   const currentJoke = toSignal(jokeService.selectCurrentJoke$);
   if (!currentJoke()) {
-    return jokeService.getJokeBySlug(route.paramMap.get('slug')!!);
+    return jokeService.getJoke({ slug: route.paramMap.get('slug')!! });
   }
 
-  // return toObservable(jokeService.currentJoke);
-  return jokeService.getJokeBySlug(route.paramMap.get('slug')!!);
+  return jokeService.selectCurrentJoke$;
 };

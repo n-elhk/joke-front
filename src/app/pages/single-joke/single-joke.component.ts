@@ -11,6 +11,7 @@ import { CardComponent } from '../../components/card/card.component';
 import type { Joke } from '../../core/interface/joke';
 import { JokeService } from 'src/app/core/services/joke/joke.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-single-joke',
@@ -20,7 +21,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   imports: [NgIf, RouterLink, CardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SingleJokeComponent implements OnInit {
+export class SingleJokeComponent {
   /** Injection of {@link JokeService}. */
   private readonly jokeService = inject(JokeService);
 
@@ -36,10 +37,6 @@ export class SingleJokeComponent implements OnInit {
   /** Provide from route data. */
   @Input() public joke!: Joke;
 
-   public ngOnInit(): void {
-    this.jokeService.loadPreviousJoke();
-  }
-
   /**
    *
    * @param id sorted by id.
@@ -48,8 +45,9 @@ export class SingleJokeComponent implements OnInit {
     const previous = this.previousJoke();
 
     if (previous) {
-      this.jokeService.updateCurrentJoke(previous.id);
-      this.router.navigate([previous.slug]);
+      this.updateJoke(previous);
+    } else {
+      this.navigateToJoke(this.joke.id - 1).subscribe();
     }
   }
 
@@ -61,8 +59,20 @@ export class SingleJokeComponent implements OnInit {
     const next = this.nextJoke();
 
     if (next) {
-      this.jokeService.updateCurrentJoke(next.id);
-      this.router.navigate([next.slug]);
+      this.updateJoke(next);
+    } else {
+      this.navigateToJoke(this.joke.id + 1).subscribe();
     }
+  }
+
+  public updateJoke(joke: Joke) {
+    this.jokeService.updateCurrentJoke(joke.id);
+    this.router.navigate([joke.slug]);
+  }
+
+  public navigateToJoke(id: number) {
+    return this.jokeService
+      .getJoke({ id })
+      .pipe(tap((joke) => this.updateJoke(joke)));
   }
 }
