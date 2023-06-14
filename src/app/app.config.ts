@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, LOCALE_ID } from '@angular/core';
 import {
   RouteReuseStrategy,
   provideRouter,
@@ -26,7 +26,7 @@ export const appConfig: ApplicationConfig = {
       deps: [JokeService],
       multi: true,
     },
-
+    { provide: LOCALE_ID, useValue: "fr-FR" }, //replace "en-US" with your locale
     provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling()),
     provideHttpClient(),
 
