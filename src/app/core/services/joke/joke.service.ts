@@ -22,19 +22,19 @@ export class JokeService extends ComponentStore<JokeStore> {
 
   private urlServer = environment.urlServer;
 
-  readonly selectJokes$ = this.select(({ jokes }) =>
+  readonly selectJokes = this.selectSignal(({ jokes }) =>
     Object.values(jokes).sort((a, b) => (b?.id ?? 0) - (a?.id ?? 0))
   );
 
-  readonly selectPreviousJokes$ = this.select(
+  readonly selectPreviousJokes = this.selectSignal(
     ({ previousJoke }) => previousJoke
   );
 
-  readonly selectCurrentJoke$ = this.select(({ currentJoke }) => currentJoke);
+  readonly selectCurrentJoke = this.selectSignal(({ currentJoke }) => currentJoke);
 
-  readonly selectNextJokes$ = this.select(({ nextJoke }) => nextJoke);
+  readonly selectNextJokes = this.selectSignal(({ nextJoke }) => nextJoke);
 
-  readonly selectIsLoading$ = this.select(({ loading }) => loading);
+  readonly selectIsLoading = this.selectSignal(({ loading }) => loading);
 
   readonly updateJokes = this.updater((state, jokes: Joke[]) => ({
     ...state,

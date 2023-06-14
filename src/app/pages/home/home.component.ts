@@ -4,7 +4,7 @@ import {
   Component,
   inject,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { JokeService } from '../../core/services/joke/joke.service';
 import { Router, RouterLink } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
@@ -30,11 +30,11 @@ export class HomeComponent {
   /** Injection of {@link ChangeDetectorRef}. */
   private readonly cdr = inject(ChangeDetectorRef);
 
-  public jokes = toSignal(this.jokeService.selectJokes$, { initialValue: [] });
+  public jokes = this.jokeService.selectJokes;
 
-  public isLoading = toSignal(this.jokeService.selectIsLoading$, { initialValue: false });
+  public isLoading = this.jokeService.selectIsLoading;
 
-  public currentJoke = toSignal(this.jokeService.selectCurrentJoke$);
+  public currentJoke = this.jokeService.selectCurrentJoke;
 
   constructor() {
     fromEvent(window, 'scroll', { passive: true })

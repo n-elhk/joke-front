@@ -4,13 +4,11 @@ import {
   Input,
   inject,
   ChangeDetectionStrategy,
-  OnInit,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
 import type { Joke } from '../../core/interface/joke';
 import { JokeService } from 'src/app/core/services/joke/joke.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 
 @Component({
@@ -28,11 +26,9 @@ export class SingleJokeComponent {
   /** Injection of {@link Router}. */
   private readonly router = inject(Router);
 
-  protected readonly previousJoke = toSignal(
-    this.jokeService.selectPreviousJokes$
-  );
+  protected readonly previousJoke =  this.jokeService.selectPreviousJokes;
 
-  protected readonly nextJoke = toSignal(this.jokeService.selectNextJokes$);
+  protected readonly nextJoke = this.jokeService.selectNextJokes;
 
   /** Provide from route data. */
   @Input() public joke!: Joke;
