@@ -8,7 +8,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { JokeService } from '../../core/services/joke/joke.service';
 import { Router, RouterLink } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
-import { NgForOf, NgIf } from '@angular/common';
 import { filter, fromEvent, switchMap, tap, throttleTime } from 'rxjs';
 import { SpinnerComponent } from 'src/app/components/spinner/spinner.component';
 
@@ -17,7 +16,7 @@ import { SpinnerComponent } from 'src/app/components/spinner/spinner.component';
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [CardComponent, NgForOf, RouterLink, NgIf, SpinnerComponent],
+  imports: [CardComponent, RouterLink, SpinnerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {

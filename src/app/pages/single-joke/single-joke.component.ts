@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   Component,
   Input,
@@ -16,7 +15,7 @@ import { tap } from 'rxjs';
   standalone: true,
   templateUrl: './single-joke.component.html',
   styleUrls: ['./single-joke.component.scss'],
-  imports: [NgIf, RouterLink, CardComponent],
+  imports: [RouterLink, CardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SingleJokeComponent {
@@ -26,7 +25,7 @@ export class SingleJokeComponent {
   /** Injection of {@link Router}. */
   private readonly router = inject(Router);
 
-  protected readonly previousJoke =  this.jokeService.selectPreviousJokes;
+  protected readonly previousJoke = this.jokeService.selectPreviousJokes;
 
   protected readonly nextJoke = this.jokeService.selectNextJokes;
 

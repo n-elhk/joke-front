@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, inject } from '@angular/core';
 import { Event, Router, RouterOutlet, Scroll } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
-import { NgIf, ViewportScroller } from '@angular/common';
+import { ViewportScroller } from '@angular/common';
 import { delay, filter, tap } from 'rxjs';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './app.component.html',
   standalone: true,
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, HeaderComponent, NgIf],
+  imports: [RouterOutlet, HeaderComponent],
 })
 export class AppComponent {
   public title = 'joke-front';

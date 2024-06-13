@@ -29,8 +29,6 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: "fr-FR" }, //replace "en-US" with your locale
     provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling()),
     provideHttpClient(),
-
     provideComponentStore(JokeService),
-
   ],
 };
