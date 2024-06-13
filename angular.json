@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "joke-front:build:production"
+              "buildTarget": "joke-front:build:production"
             },
             "development": {
-              "browserTarget": "joke-front:build:development"
+              "buildTarget": "joke-front:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -82,7 +82,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "joke-front:build"
+            "buildTarget": "joke-front:build"
           }
         },
         "test": {
